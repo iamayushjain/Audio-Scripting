@@ -5,22 +5,22 @@ import java.util.ArrayList;
 
 public class AudioSplittingScript {
 
-	public static String audioFilePath = "C:\\Users\\user\\Music\\000000002.raw";
-	public static String resultFilePath = "D:\\WorkSpace_Studio\\Models\\Audio Spliting Script\\AudioSplit02.txt";
+	public static String audioFilePath = "C:\\Users\\user\\Music\\vijayAudioConv.wav";
+	public static String resultFilePath = "D:\\WorkSpace_Studio\\Models\\Audio Spliting Script\\AudioSplit03.txt";
 	public static ArrayList<Integer> amplitudeList, startIndexList, endIndexList;
 	public static int highestAmplitude;
-	public static int minAreaPercentage = 10;
+	public static int minAreaPercentage = 35;
 	public static float minArea;
 	public static ArrayList<Integer> classificationAmplitudeList;
 	public static int sampleRate = 16000;
-	public static int sampleDurationRate = 1600; // 10% of sample rate
+	public static int sampleDurationRate = sampleRate*3; // 10% of sample rate
 	public static PrintWriter writer;
 	public static String outputWriter;
 
 	public static void main(String args[]) {
 		init();
-		amplitudeList = RawAudioToAmplitude.rawToAmplitude(audioFilePath);
-		print("amplitudeList: " + amplitudeList.toString());
+		amplitudeList = WavAudioToAmplitude.rawToAmplitude(audioFilePath);
+		// print("amplitudeList: " + amplitudeList.toString());
 		print("Size of Amplitude: " + amplitudeList.size());
 		highestAmplitude = getHighestAmplitude();
 		print("highestAmplitude: " + highestAmplitude);
@@ -28,7 +28,8 @@ public class AudioSplittingScript {
 		minArea = (float) (minAreaPercentage * highestAmplitude) / 100;
 		print("minArea: " + minArea);
 		classifactionAmplitude();
-		print("classificationAmplitudeList:" + classificationAmplitudeList.toString());
+		// print("classificationAmplitudeList:" +
+		// classificationAmplitudeList.toString());
 		print("Size of Classification Amplitude List: " + classificationAmplitudeList.size());
 
 		audioSpliting();
@@ -47,7 +48,7 @@ public class AudioSplittingScript {
 		startIndexList = new ArrayList<Integer>();
 		endIndexList = new ArrayList<Integer>();
 		try {
-			outputWriter="";
+			outputWriter = "";
 			writer = new PrintWriter(resultFilePath, "UTF-8");
 		} catch (Exception e) {
 			print("File not found Error");
@@ -116,8 +117,7 @@ public class AudioSplittingScript {
 
 	public static String getTimeInSec(int sampleNumber) {
 
-	
-		return String.format("%.3f",((float) sampleNumber / 16000));
+		return String.format("%.3f", ((float) sampleNumber / 16000));
 
 	}
 
@@ -130,7 +130,8 @@ public class AudioSplittingScript {
 				voiceAreaCounter++;
 				print("Voice " + voiceAreaCounter);
 				print(start + " " + (startIndexList.get(i) - 1));
-				outputWriter+="Voice " + voiceAreaCounter+"\t"+getTimeInSec(start)+"\t"+getTimeInSec((startIndexList.get(i) - 1))+"\r\n";
+				outputWriter += "Voice " + voiceAreaCounter + "\t" + getTimeInSec(start) + "\t"
+						+ getTimeInSec((startIndexList.get(i) - 1)) + "\r\n";
 
 			}
 			if (endIndexList.get(i) != amplitudeList.size()) {
@@ -139,7 +140,8 @@ public class AudioSplittingScript {
 					voiceAreaCounter++;
 					print("Voice " + voiceAreaCounter);
 					print(start + " " + (amplitudeList.size()));
-					outputWriter+="Voice " + voiceAreaCounter+"\t"+getTimeInSec(start)+"\t"+getTimeInSec((amplitudeList.size()))+"\r\n";
+					outputWriter += "Voice " + voiceAreaCounter + "\t" + getTimeInSec(start) + "\t"
+							+ getTimeInSec((amplitudeList.size())) + "\r\n";
 				}
 			} else {
 

@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class RawAudioToAmplitude {
+public class WavAudioToAmplitude {
 
 	public static ArrayList<Integer> rawToAmplitude(String audioFilePath) {
 
@@ -15,11 +15,12 @@ public class RawAudioToAmplitude {
 			InputStream dis = new FileInputStream(filelength);
 			ArrayList<Integer> arraylist = new ArrayList<Integer>();
 			int max = 0, cout = 0, firstbyte = 0, completeByte = 0;
-			//dis.skip(44);
+			dis.skip(44);
 			long counter = -1, maxcounter = 0;
 			int minBufferSize = 2592;
 
 			int i = 0;
+			long x=0;
 			byte[] temp = new byte[minBufferSize];
 			ArrayList<Integer> amplitudeList = new ArrayList<Integer>();
 			while ((i = dis.read(temp, 0, minBufferSize)) > -1) {
@@ -33,19 +34,23 @@ public class RawAudioToAmplitude {
 						firstbyte = b;
 						continue;
 					}
-
+					x++;
+					if(x%160000==0)
+					{
+						System.out.println(AudioSplittingScript.getTimeInSec((int)x) + "");
+					}
 					completeByte = ((b << 8) + (firstbyte & 0xFF));
 					// writer.append(completeByte + ",");
 					// Log.d("completeByte", completeByte + "");
-					System.out.println(completeByte + "");
+					//System.out.println(completeByte + "");
 					amplitudeList.add(completeByte);
 					completeByte = Math.abs(completeByte);
 					// arraylist.add(completeByte);
-					if (completeByte > max) {
-						max = completeByte;
-						maxcounter = counter;
-						// System.out.println(max+" "+maxcounter);
-					}
+//					if (completeByte > max) {
+//						max = completeByte;
+//						maxcounter = counter;
+//						// System.out.println(max+" "+maxcounter);
+//					}
 
 					cout = 0;
 
@@ -63,7 +68,7 @@ public class RawAudioToAmplitude {
 	}
 
 	public static void main(String[] args) {
-		String audioFilePath = "C:\\Users\\user\\Music\\000000002.raw";
+		String audioFilePath = "C:\\Users\\user\\Music\\vijayAudioConv.wav";
 		rawToAmplitude(audioFilePath);
 	}
 }

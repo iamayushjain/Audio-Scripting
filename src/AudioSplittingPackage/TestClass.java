@@ -62,7 +62,7 @@ public class TestClass {
 		startIndexList.add(9);
 		endIndexList.add(4);
 		endIndexList.add(7);
-		endIndexList.add(18);
+		endIndexList.add(20);
 		getVoicedAreas();
 
 	}
